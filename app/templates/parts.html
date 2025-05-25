@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}{{ machine.name }} Parts{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ machine.name }} Parts</h1>
+        <div>
+            <a href="{{ url_for('main.add_part') }}" class="btn btn-success">Add New Part</a>
+            <a href="{{ url_for('main.machines') }}" class="btn btn-secondary">Back to Machines</a>
+        </div>
+    </div>
+    
+    {% if parts %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Part Name</th>
+                    <th>Part Number</th>
+                    <th>Total Received</th>
+                    <th>Consumed</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for part in parts %}
+                <tr>
+                    <td>{{ part.name }}</td>
+                    <td>{{ part.part_number }}</td>
+                    <td>{{ part.total_received }}</td>
+                    <td>{{ part.consumed }}</td>
+                    <td class="{{ 'text-danger' if part.available <= 0 else 'text-success' }}">
+                        {{ part.available }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('main.part_history', part_id=part.id) }}" class="btn btn-info btn-sm">History</a>
+                        <a href="{{ url_for('main.consume_part', part_id=part.id) }}" class="btn btn-warning btn-sm">Consume</a>
+                        <form action="{{ url_for('main.delete_part', part_id=part.id) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this part?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No parts found for this machine. Add your first part!</div>
+    {% endif %}
+{% endblock %}

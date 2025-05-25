@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Activity Log{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Activity Log</h1>
+        <a href="{{ url_for('main.machines') }}" class="btn btn-secondary">Back to Machines</a>
+    </div>
+    
+    {% if activities %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Date/Time</th>
+                    <th>User</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activities %}
+                <tr>
+                    <td>{{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ activity.actor.username }}</td>
+                    <td>{{ activity.action }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No activities logged yet.</div>
+    {% endif %}
+{% endblock %}

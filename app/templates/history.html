@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ part.name }} History{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ part.name }} ({{ part.part_number }}) History</h1>
+        <a href="{{ url_for('main.machine_parts', machine_id=part.machine_id) }}" class="btn btn-secondary">Back to Parts</a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <h5>Total Received</h5>
+                    <p class="h4">{{ part.total_received }}</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Total Consumed</h5>
+                    <p class="h4">{{ part.consumed }}</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Available</h5>
+                    <p class="h4 {{ 'text-danger' if part.available <= 0 else 'text-success' }}">{{ part.available }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if history %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Date/Time</th>
+                    <th>Action</th>
+                    <th>Quantity</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in history %}
+                <tr>
+                    <td>{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <span class="badge bg-{{ 'success' if entry.action == 'added' else 'warning' }}">
+                            {{ entry.action|title }}
+                        </span>
+                    </td>
+                    <td>{{ entry.quantity }}</td>
+                    <td>{{ entry.notes or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No history found for this part.</div>
+    {% endif %}
+{% endblock %}

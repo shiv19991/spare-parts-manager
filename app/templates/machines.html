@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Machines{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Machines</h1>
+        <a href="{{ url_for('main.add_machine') }}" class="btn btn-success">Add New Machine</a>
+    </div>
+    
+    {% if machines %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for machine in machines %}
+                <tr>
+                    <td><a href="{{ url_for('main.machine_parts', machine_id=machine.id) }}">{{ machine.name }}</a></td>
+                    <td>{{ machine.description }}</td>
+                    <td>
+                        <form action="{{ url_for('main.delete_machine', machine_id=machine.id) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this machine?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No machines found. Add your first machine!</div>
+    {% endif %}
+{% endblock %}

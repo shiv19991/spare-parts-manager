@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request
+from app import app
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
@@ -157,3 +158,9 @@ def part_history(part_id):
 def activity_log():
     activities = UserActivity.query.order_by(UserActivity.timestamp.desc()).all()
     return render_template('activity_log.html', title='Activity Log', activities=activities)
+
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
